@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      { "source": "/placeOrder", "function": "placeOrder" },
+      { "source": "/submitPayment", "function": "submitManualPayment" },
+      { "source": "/admin/updateOrder", "function": "adminUpdateOrder" }
+    ]
+  }
+}

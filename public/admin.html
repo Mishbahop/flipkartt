@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mishbah Admin Console</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <script type="module" src="js/admin.js" defer></script>
+</head>
+<body class="admin-body admin-locked">
+  <header class="admin-header">
+    <div class="brand">Mishbah Admin</div>
+    <div class="admin-actions">
+      <div class="admin-status">
+        <span id="adminStatus">Sign in to manage the store</span>
+        <p id="adminAuthMessage" class="auth-message muted"></p>
+      </div>
+      <form id="adminEmailForm" class="admin-email-form">
+        <input type="email" id="adminEmail" placeholder="admin@email.com" />
+        <input type="password" id="adminPassword" placeholder="Password" />
+        <button type="submit" class="ghost" id="adminEmailLogin">Email Login</button>
+      </form>
+      <button id="adminAuthBtn" class="cta">Login with Google</button>
+      <button id="adminSignOut" class="ghost" hidden>Sign out</button>
+    </div>
+  </header>
+
+  <main class="admin-layout">
+    <aside class="admin-nav">
+      <button data-section="products" class="active">Products</button>
+      <button data-section="orders">Orders</button>
+      <a href="/" class="ghost link-home">← Back to store</a>
+    </aside>
+
+    <section class="admin-content">
+      <p id="adminGate" class="admin-gate muted">Admin access required. Sign in with an authorized account.</p>
+
+      <div id="productsSection" class="admin-section active">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Product Catalog</h2>
+              <p class="muted">Add new SKUs or update existing listings.</p>
+            </div>
+            <div class="panel-actions">
+              <button id="productReset" class="ghost">Reset Form</button>
+            </div>
+          </div>
+          <div class="panel-body grid-two">
+            <form id="productForm" class="admin-form">
+              <input id="productTitle" placeholder="Title" required />
+              <input id="productBrand" placeholder="Brand" />
+              <input id="productCategory" placeholder="Category" required />
+              <div class="double">
+                <input id="productPrice" placeholder="Price (₹)" type="number" min="0" required />
+                <input id="productRating" placeholder="Rating" type="number" step="0.1" min="0" max="5" />
+              </div>
+              <div class="double">
+                <input id="productStock" placeholder="Stock" type="number" min="0" />
+                <input id="productDeal" placeholder="Deal expires (YYYY-MM-DD)" type="date" />
+              </div>
+              <input id="productImage" placeholder="Image URL" />
+              <textarea id="productDescription" rows="4" placeholder="Description"></textarea>
+              <div class="form-actions">
+                <button type="submit" class="cta" id="productSubmit">Save Product</button>
+                <button type="button" class="ghost danger" id="productDelete" hidden>Delete</button>
+              </div>
+            </form>
+            <div class="admin-list" id="productList">
+              <p class="muted">Products will appear here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="ordersSection" class="admin-section">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Orders &amp; Payments</h2>
+              <p class="muted">Review UTR submissions and fulfill orders.</p>
+            </div>
+            <div class="panel-actions">
+              <button id="refreshOrders" class="ghost">Refresh</button>
+            </div>
+          </div>
+          <div class="admin-list admin-orders" id="adminOrders">
+            <p class="muted">Orders will appear here.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mishbah Store | Flipkart Style</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="module" src="js/app.js" defer></script>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="brand">Mishbah</div>
+    <div class="search">
+      <input id="searchInput" placeholder="Search for products, brands and more" />
+      <button id="searchBtn">Search</button>
+    </div>
+    <div class="user-actions">
+      <button id="loginBtn">Login</button>
+      <button id="ordersBtn">Orders</button>
+      <button id="cartBtn">Cart <span class="badge" id="cartCount">0</span></button>
+      <button id="wishlistBtn">Wishlist</button>
+      <button id="adminBtn" hidden>Admin</button>
+    </div>
+  </header>
+
+  <nav class="categories" id="categoryNav"></nav>
+
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="kicker">Festival Deals</p>
+      <h1>Up to 60% off Electronics</h1>
+      <p>Exchange offers • No cost EMI • Bank cashback</p>
+      <a class="cta" href="#dealsOfDay">Shop Now</a>
+    </div>
+    <div class="hero-art"></div>
+  </section>
+
+  <main>
+    <section id="dealsOfDay" class="product-rail">
+      <div class="rail-header">
+        <h2>Deals of the Day</h2>
+        <div class="countdown" id="dealCountdown"></div>
+      </div>
+      <div class="product-grid" data-section="deals"></div>
+    </section>
+
+    <section class="filters">
+      <label>
+        Category
+        <select id="filterCategory"></select>
+      </label>
+      <label>
+        Price
+        <input type="range" id="priceFilter" min="0" max="200000" step="500" />
+        <span id="priceValue">₹200000</span>
+      </label>
+      <label>
+        Rating
+        <select id="ratingFilter">
+          <option value="0">All</option>
+          <option value="4">4★ & above</option>
+          <option value="3">3★ & above</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="product-grid" id="catalogGrid"></section>
+  </main>
+
+  <aside class="drawer" id="cartDrawer">
+    <header>
+      <h3>Your Cart</h3>
+      <small id="cartSyncStatus" class="sync-status"></small>
+      <button data-close>&times;</button>
+    </header>
+    <div class="drawer-body" id="cartItems"></div>
+    <footer>
+      <div class="summary">
+        <span>Total</span>
+        <span id="cartTotal">₹0</span>
+      </div>
+      <button id="checkoutBtn" class="cta">Place Order</button>
+    </footer>
+  </aside>
+
+  <aside class="drawer" id="wishlistDrawer">
+    <header>
+      <h3>Wishlist</h3>
+      <button data-close>&times;</button>
+    </header>
+    <div class="drawer-body" id="wishlistItems"></div>
+  </aside>
+
+  <dialog id="productModal">
+    <article>
+      <button data-close>&times;</button>
+      <img id="modalImage" alt="" />
+      <div>
+        <h3 id="modalTitle"></h3>
+        <p id="modalBrand"></p>
+        <p id="modalPrice"></p>
+        <p id="modalDescription"></p>
+        <button id="modalAddCart">Add to Cart</button>
+      </div>
+    </article>
+  </dialog>
+
+  <dialog id="authModal">
+    <form id="authForm">
+      <h3>Login / Signup</h3>
+      <input type="email" id="authEmail" placeholder="Email" required />
+      <input type="password" id="authPassword" placeholder="Password" required />
+      <button type="submit">Continue</button>
+      <button type="button" id="googleAuth">Continue with Google</button>
+    </form>
+  </dialog>
+
+  <dialog id="checkoutModal">
+    <form id="checkoutForm" class="stack gap-lg">
+      <header class="modal-header">
+        <h3>Complete Your Order</h3>
+        <button type="button" data-close>&times;</button>
+      </header>
+      <section class="checkout-summary">
+        <div>
+          <p>Total Payable</p>
+          <strong id="checkoutAmount">₹0</strong>
+        </div>
+        <div>
+          <p>Pay via UPI to</p>
+          <code id="checkoutUpi">mishbah@upi</code>
+          <small>Transfer the amount, then paste the UTR below.</small>
+        </div>
+      </section>
+      <section class="checkout-grid">
+        <fieldset>
+          <legend>Shipping</legend>
+          <input id="shipName" placeholder="Full Name" required />
+          <input id="shipPhone" placeholder="Phone" required />
+          <input id="shipAddress1" placeholder="Address line 1" required />
+          <input id="shipAddress2" placeholder="Address line 2 (optional)" />
+          <div class="double">
+            <input id="shipCity" placeholder="City" required />
+            <input id="shipState" placeholder="State" required />
+          </div>
+          <input id="shipPostal" placeholder="Postal Code" required />
+        </fieldset>
+        <fieldset>
+          <legend>Payment Proof</legend>
+          <input id="utrInput" placeholder="Enter UTR / Reference number" required />
+          <textarea id="paymentNote" rows="4" placeholder="Notes (optional)"></textarea>
+          <p class="muted">
+            Orders stay pending until an admin verifies your UTR. Keep your payment receipt handy.
+          </p>
+        </fieldset>
+      </section>
+      <footer class="modal-actions">
+        <button type="submit" class="cta">Submit UTR &amp; Place Order</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog id="ordersModal">
+    <article class="orders-shell">
+      <button type="button" data-close>&times;</button>
+      <header>
+        <h3>Your Orders</h3>
+        <p class="muted">Track order status and payment verification.</p>
+      </header>
+      <section id="ordersList" class="orders-list"></section>
+    </article>
+  </dialog>
+
+  <dialog id="paymentModal">
+    <form id="paymentForm" class="stack gap-lg">
+      <header class="modal-header">
+        <h3>Update Payment Proof</h3>
+        <button type="button" data-close>&times;</button>
+      </header>
+      <input type="hidden" id="paymentOrderId" />
+      <section class="stack gap-md">
+        <p>Order <strong id="paymentOrderLabel"></strong></p>
+        <input id="paymentUtr" placeholder="Enter UTR" required />
+        <textarea id="paymentNotes" rows="4" placeholder="Add any note for admin"></textarea>
+      </section>
+      <footer class="modal-actions">
+        <button type="submit" class="cta ghost">Submit</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div id="toastContainer" class="toast-container"></div>
+</body>
+</html>

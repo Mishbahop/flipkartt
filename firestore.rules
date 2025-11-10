@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function validateProduct() {
+      let data = request.resource.data;
+      return 
+        data.title is string && data.title.size() > 0 &&
+        data.price is number && data.price >= 0 &&
+        (!('rating' in data) || (data.rating is number && data.rating >= 0 && data.rating <= 5)) &&
+        (!('category' in data) || data.category is string) &&
+        (!('description' in data) || data.description is string);
+    }
+
+    function validateCart() {
+      let data = request.resource.data;
+      return 
+        data.items is list &&
+        data.updatedAt is timestamp;
+    }
+
+    function validateOrder() {
+      let data = request.resource.data;
+      return 
+        data.uid == request.auth.uid &&
+        data.items is list &&
+        data.items.size() > 0 &&
+        data.amount is number && 
+        data.amount > 0 &&
+        data.status in ['PENDING', 'PROCESSING', 'SHIPPED', 'COMPLETED', 'CANCELLED'] &&
+        data.paymentStatus in ['PENDING', 'SUBMITTED', 'APPROVED', 'REJECTED'] &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && validateProduct();
+      allow delete: if isAdmin();
+    }
+
+    match /carts/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if isOwner(userId) && validateCart();
+    }
+
+    match /orders/{orderId} {
+      allow create: if isAuthenticated() && validateOrder();
+      allow read: if isAuthenticated() && (isAdmin() || resource.data.uid == request.auth.uid);
+      allow update: if isAdmin() && validateOrder();
+    }
+  }
+}
