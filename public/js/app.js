@@ -510,17 +510,34 @@ function findProduct(productId) {
 }
 
 function addToCart(productId) {
+  console.log("addToCart called with productId:", productId);
+  
   const product = findProduct(productId);
-  if (!product) return;
-  const existing = state.cart.find(item => item.id === productId);
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    state.cart.push({ id: productId, title: product.title, price: product.price, qty: 1 });
+  if (!product) {
+    console.error("❌ Product not found:", productId);
+    handleError(new Error("Product not found"), "Cannot add to cart");
+    return;
   }
-  persist(STORAGE_KEYS.cart, state.cart);
-  renderCart();
-  syncCartRemote();
+  
+  try {
+    const existing = state.cart.find(item => item.id === productId);
+    if (existing) {
+      existing.qty += 1;
+      console.log(`✓ Increased quantity for ${product.title} to ${existing.qty}`);
+      showToast("info", `${product.title} quantity updated to ${existing.qty}`);
+    } else {
+      state.cart.push({ id: productId, title: product.title, price: product.price, qty: 1 });
+      console.log(`✓ Added ${product.title} to cart`);
+      showToast("success", `Added "${product.title}" to cart`);
+    }
+    
+    persist(STORAGE_KEYS.cart, state.cart);
+    renderCart();
+    syncCartRemote();
+  } catch (err) {
+    console.error("❌ Error adding to cart:", err);
+    handleError(err, "Failed to add to cart");
+  }
 }
 
 function updateCartQuantity(productId, delta) {
@@ -543,11 +560,32 @@ function removeFromCart(productId) {
 }
 
 function addToWishlist(productId) {
+  console.log("addToWishlist called with productId:", productId);
+  
   const product = findProduct(productId);
-  if (!product || state.wishlist.some(item => item.id === productId)) return;
-  state.wishlist.push({ id: productId, title: product.title, price: product.price });
-  persist(STORAGE_KEYS.wishlist, state.wishlist);
-  renderWishlist();
+  if (!product) {
+    console.error("❌ Product not found for wishlist:", productId);
+    handleError(new Error("Product not found"), "Cannot add to wishlist");
+    return;
+  }
+  
+  // Check if already in wishlist
+  if (state.wishlist.some(item => item.id === productId)) {
+    console.log("⚠️ Item already in wishlist");
+    showToast("info", "Item already in wishlist");
+    return;
+  }
+  
+  try {
+    state.wishlist.push({ id: productId, title: product.title, price: product.price });
+    persist(STORAGE_KEYS.wishlist, state.wishlist);
+    renderWishlist();
+    showToast("success", `Added "${product.title}" to wishlist`);
+    console.log("✓ Item added to wishlist successfully");
+  } catch (err) {
+    console.error("❌ Error adding to wishlist:", err);
+    handleError(err, "Failed to add to wishlist");
+  }
 }
 
 function removeFromWishlist(productId) {
@@ -575,16 +613,37 @@ function applyFilters() {
 }
 
 function showProductModal(productId) {
+  console.log("showProductModal called with productId:", productId);
   const product = findProduct(productId);
-  if (!product) return;
-  state.activeProduct = product;
-  els.modalImage.src = product.imageUrl;
-  els.modalImage.alt = product.title;
-  els.modalTitle.textContent = product.title;
-  els.modalBrand.textContent = product.brand;
-  els.modalPrice.textContent = formatINR(product.price);
-  els.modalDescription.textContent = product.description || "";
-  els.productModal.showModal();
+  
+  if (!product) {
+    console.error("❌ Product not found:", productId);
+    handleError(new Error("Product not found"), "Unable to load product details");
+    return;
+  }
+  
+  console.log("✓ Product found:", product.title);
+  
+  try {
+    state.activeProduct = product;
+    els.modalImage.src = product.imageUrl;
+    els.modalImage.alt = product.title;
+    els.modalTitle.textContent = product.title;
+    els.modalBrand.textContent = product.brand;
+    els.modalPrice.textContent = formatINR(product.price);
+    els.modalDescription.textContent = product.description || "";
+    
+    if (els.productModal && typeof els.productModal.showModal === "function") {
+      els.productModal.showModal();
+      console.log("✓ Product modal opened successfully");
+    } else {
+      console.error("❌ Product modal element not found or showModal not available");
+      handleError(new Error("Modal not available"), "Cannot open product details");
+    }
+  } catch (err) {
+    console.error("❌ Error showing product modal:", err);
+    handleError(err, "Error loading product details");
+  }
 }
 
 function openAuthModal() {
@@ -689,9 +748,24 @@ els.catalogGrid.addEventListener("click", evt => {
   if (!card) return;
   const productId = card.dataset.id;
   const action = evt.target.dataset.action;
-  if (action === "cart") addToCart(productId);
-  if (action === "wishlist") addToWishlist(productId);
-  if (action === "view") showProductModal(productId);
+  
+  // Debug logging
+  if (action) {
+    console.log(`🔘 Button clicked: ${action} on product ${productId}`);
+  }
+  
+  if (action === "cart") {
+    console.log("Adding to cart:", productId);
+    addToCart(productId);
+  }
+  if (action === "wishlist") {
+    console.log("Adding to wishlist:", productId);
+    addToWishlist(productId);
+  }
+  if (action === "view") {
+    console.log("Viewing product:", productId);
+    showProductModal(productId);
+  }
 });
 
 els.dealsGrid.addEventListener("click", evt => {

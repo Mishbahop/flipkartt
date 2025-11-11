@@ -190,5 +190,18 @@
   </dialog>
 
   <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Debug script - remove in production -->
+  <script>
+    // Quick debug: Check if buttons work by logging clicks
+    document.addEventListener("click", (e) => {
+      if (e.target.dataset.action === "view") {
+        console.log("✓ View button clicked for product:", e.target.closest(".product-card").dataset.id);
+      }
+      if (e.target.dataset.action === "wishlist") {
+        console.log("✓ Wishlist button clicked for product:", e.target.closest(".product-card").dataset.id);
+      }
+    }, true);
+  </script>
 </body>
 </html>

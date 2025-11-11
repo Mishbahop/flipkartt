@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test View & Wishlist Buttons</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      color: #2874f0;
+      border-bottom: 3px solid #2874f0;
+      padding-bottom: 10px;
+    }
+    
+    .test-steps {
+      background: #f0f7ff;
+      padding: 20px;
+      border-left: 4px solid #2874f0;
+      margin: 20px 0;
+      border-radius: 6px;
+    }
+    
+    .test-steps h3 {
+      margin-top: 0;
+      color: #2874f0;
+    }
+    
+    .test-steps ol {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+    
+    .test-steps li {
+      margin: 8px 0;
+      line-height: 1.6;
+    }
+    
+    .code-block {
+      background: #272822;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      margin: 15px 0;
+    }
+    
+    .button-test {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 15px 0;
+    }
+    
+    .button-test h3 {
+      color: #856404;
+      margin-top: 0;
+    }
+    
+    .status {
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .status.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    
+    button {
+      background: #2874f0;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 5px;
+    }
+    
+    button:hover {
+      background: #1e5ed1;
+    }
+    
+    .console-output {
+      background: #1e1e1e;
+      color: #00ff00;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      min-height: 100px;
+      max-height: 300px;
+      overflow-y: auto;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔘 Testing View & Wishlist Buttons</h1>
+    
+    <div class="test-steps">
+      <h3>What You Need to Test:</h3>
+      <ol>
+        <li>Load the main page (index.html)</li>
+        <li>Make sure you're logged in</li>
+        <li>Verify products are showing</li>
+        <li>Click "View" button on any product</li>
+        <li>Click "Wishlist" button on any product</li>
+        <li>Check browser console for debug messages</li>
+      </ol>
+    </div>
+
+    <div class="button-test">
+      <h3>🔍 How to Debug:</h3>
+      <p><strong>Press F12</strong> to open Developer Tools, then click the buttons on the page.</p>
+      <p>You should see console messages like:</p>
+      <div class="code-block">
+✓ View button clicked for product: abc123
+✓ Wishlist button clicked for product: abc123
+showProductModal called with productId: abc123
+✓ Product modal opened successfully
+addToWishlist called with productId: abc123
+✓ Item added to wishlist successfully
+      </div>
+    </div>
+
+    <div class="test-steps">
+      <h3>If Nothing Happens When You Click:</h3>
+      <ol>
+        <li>Press F12 to open console</li>
+        <li>Look for RED error messages</li>
+        <li>Note down the exact error</li>
+        <li>Check that products are loaded
+          <div class="code-block">
+// In browser console:
+console.log(state.products.length); // Should show > 0
+          </div>
+        </li>
+        <li>If no products, run:
+          <div class="code-block">
+$ node scripts/seed-products.mjs
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="test-steps">
+      <h3>✅ If Everything Works:</h3>
+      <ol>
+        <li>✓ View button opens product modal</li>
+        <li>✓ Modal shows product details</li>
+        <li>✓ Wishlist button adds to wishlist</li>
+        <li>✓ Toast notification shows success message</li>
+        <li>✓ Console logs show debug messages</li>
+      </ol>
+      <div class="status success">
+        ✓ All buttons working correctly!
+      </div>
+    </div>
+
+    <h2>🔧 Quick Fixes</h2>
+    
+    <div class="test-steps">
+      <h3>Problem: No products showing</h3>
+      <p>Solution: Seed the database</p>
+      <div class="code-block">
+$ node scripts/seed-products.mjs
+      </div>
+    </div>
+
+    <div class="test-steps">
+      <h3>Problem: "Product not found" error</h3>
+      <p>Solution: Make sure products are loaded</p>
+      <div class="code-block">
+// In browser console:
+location.reload()  // Hard refresh
+      </div>
+    </div>
+
+    <div class="test-steps">
+      <h3>Problem: Modal doesn't open</h3>
+      <p>Solution: Check if HTML dialog element exists</p>
+      <div class="code-block">
+// In browser console:
+document.getElementById("productModal")  // Should not be null
+      </div>
+    </div>
+
+    <div class="test-steps">
+      <h3>Problem: Wishlist button doesn't respond</h3>
+      <p>Solution: Make sure you're logged in</p>
+      <ol>
+        <li>Click "Login" button</li>
+        <li>Enter: test@example.com</li>
+        <li>Enter: Test123456</li>
+        <li>Try wishlist button again</li>
+      </ol>
+    </div>
+
+    <h2>📝 Command Reference</h2>
+    
+    <div class="test-steps">
+      <h3>Run these in your project directory:</h3>
+      <div class="code-block">
+# Seed products
+$ node scripts/seed-products.mjs
+
+# Deploy Firebase
+$ firebase deploy
+
+# Deploy just rules
+$ firebase deploy --only firestore:rules
+
+# Deploy just functions
+$ firebase deploy --only functions
+      </div>
+    </div>
+
+    <h2>📖 Browser Console Tricks</h2>
+    
+    <div class="test-steps">
+      <h3>Copy-paste these into browser console (F12):</h3>
+      
+      <p><strong>Check if products loaded:</strong></p>
+      <div class="code-block">
+console.log("Products loaded:", state.products.length > 0)
+      </div>
+      
+      <p><strong>Check product details:</strong></p>
+      <div class="code-block">
+console.log(state.products[0])
+      </div>
+      
+      <p><strong>Check cart:</strong></p>
+      <div class="code-block">
+console.log("Cart items:", state.cart.length)
+console.table(state.cart)
+      </div>
+      
+      <p><strong>Check wishlist:</strong></p>
+      <div class="code-block">
+console.log("Wishlist items:", state.wishlist.length)
+console.table(state.wishlist)
+      </div>
+      
+      <p><strong>Test view button manually:</strong></p>
+      <div class="code-block">
+// Get first product ID
+const firstProductId = state.products[0].id
+// Open modal
+showProductModal(firstProductId)
+      </div>
+      
+      <p><strong>Test wishlist button manually:</strong></p>
+      <div class="code-block">
+// Get first product ID
+const firstProductId = state.products[0].id
+// Add to wishlist
+addToWishlist(firstProductId)
+      </div>
+    </div>
+
+    <div class="status info">
+      ℹ️ All improvements have been implemented. Now click the buttons on your site and check the browser console!
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+      <p style="color: #666;">For more help, check TROUBLESHOOTING.md</p>
+    </div>
+  </div>
+</body>
+</html>
